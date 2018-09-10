@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>下拉刷新</title>
+</head>
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #f5f5f5
+  }
+
+  #up {
+    position: relative;
+  }
+
+  .tran {
+    -webkit-transition: all .3s;
+    transition: all 0.3s
+  }
+
+  #drop-down,
+  #Pull {
+    line-height: 36px;
+    font-size: 14px;
+    text-align: center;
+    color: #666;
+    height: 0;
+    -webkit-transition: all .3s;
+    transition: all 0.3s
+  }
+
+  #up ul {
+    position: relative;
+    z-index: 2
+  }
+
+  #Pull {
+    height: 36px;
+  }
+
+
+  li {
+    height: 150px;
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .h10 {
+    height: 10px;
+  }
+
+  .h1 {
+    height: 1px
+  }
+
+</style>
+
+<body>
+  <div id="up">
+    <div id="drop-down" class="drop-down">下拉加载更多</div>
+    <div class="h10"></div>
+    <ul id="ul">
+
+
+    </ul>
+
+    <div id="Pull" class="Pull">上拉加载更多</div>
+    <div class="h1"></div>
+  </div>
+  <script type="text/javascript">
+    function downPull(div, FunDown, FunPull) {
+      //里面的有css3动画样式  tran   要注意
+      var obj = document.getElementById(div);
+      if (FunDown) {
+        var downDiv = document.getElementById('drop-down');
+      }
+      if (FunPull) {
+        var pullDiv = document.getElementById('Pull');
+      }
+
+      var Top = 0; //手指刚点的Y坐标
+      var down = 0; //下拉了多少
+      var pull = 0; //上拉了多少
+      var loodHeight = 36; //加载中一行的高度
+      var winHeight = window.screen.availHeight + document.documentElement.scrollTop;
+      obj.addEventListener('touchmove', function (event) {
+        // 如果这个元素的位置内只有一个手指的话
+        var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        var bottom = scrollTop + document.documentElement.clientHeight;
+        var objHeight = obj.offsetHeight;
+        var touch = event.targetTouches[0];
+        if (FunDown) {
+          if (scrollTop == 0 && touch.pageY > Top) {
+            if (event.targetTouches.length == 1) {
+              event.preventDefault(); // 阻止浏览器默认事件，重要 
+              obj.className = '';
+              var up = (touch.pageY - Top) * 0.5;
+              var b = 1 - up / winHeight;
+              var c = up * b;
+              down = c;
+              downDiv.style.height = c > loodHeight ? loodHeight + "px" : c + 'px';
+              obj.style.transform = "translate3d(0," + c + 'px,0)';
+            }
+          }
+        }
+        if (FunPull) {
+          if (bottom == objHeight && touch.pageY < Top) {
+            if (event.targetTouches.length == 1) {
+              event.preventDefault(); // 阻止浏览器默认事件，重要 
+              var up = (touch.pageY - Top) * 0.5;
+              var b = 1 + up / winHeight;
+              var c = up * b;
+              pull = c;
+              pullDiv.style.height = c < -loodHeight ? loodHeight + "px" : c + 'px';
+              obj.className = '';
+              obj.style.transform = "translate3d(0," + c + 'px,0)';
+            }
+          }
+        }
+      }, false);
+      obj.addEventListener('touchstart', function (event) {
+        // 如果这个元素的位置内只有一个手指的话
+        var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        if (event.targetTouches.length == 1) {
+          var touch = event.targetTouches[0];
+          Top = touch.pageY;
+        }
+      }, false);
+
+
+      obj.addEventListener("touchend", function () {
+        var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        obj.className = 'tran';
+        var position = 0;
+        obj.style.transform = "translate3d(0,0px,0)";
+        if (FunDown) {
+          if (down > 40) {
+            //obj.style.transform = "translate3d(0,40px,0)";
+            //downDiv.innerHTML='加载中……';
+            //down = 0;
+            FunDown();
+          } else {
+            downDiv.style.height = 0;
+          }
+        }
+        if (FunPull) {
+          if (pull < -60) {
+            pullDiv.innerHTML = '加载中……';
+            pull = 0;
+            FunPull();
+          } else {}
+        }
+      }, false);
+    }
+
+
+
+
+
+    function pull_lood() { // 上拉追加十项
+      var arr = [];
+      var ul = document.getElementById("ul");
+      for (var i = 0; i < 10; i++) {
+        var node = document.createElement('LI');
+        var textnode = document.createTextNode(i);
+        node.appendChild(textnode);
+        ul.appendChild(node);
+      }
+
+    }
+
+    function down_lood() { // 下拉追加十项
+      var arr = [];
+      var ul = document.getElementById("ul");
+      ul.innerHTML = '';
+      for (var i = 0; i < 10; i++) {
+        var node = document.createElement('LI');
+        var textnode = document.createTextNode(i);
+        node.appendChild(textnode);
+        ul.appendChild(node);
+      }
+
+    }
+    down_lood();
+
+
+
+
+    var drop_down = document.getElementById('drop-down')
+    downPull('up', 
+      function () {
+        //下拉
+        drop_down.style.height = 30 + 'px';
+        drop_down.innerHTML = '加载中..';
+        setTimeout(function () {
+          down_lood(); //添加数据后回0
+          drop_down.style.height = 0;
+          drop_down.innerHTML = '加载更多';
+        }, 2000)
+      }, 
+      function () {
+        //上拉
+        setTimeout(function () {
+          pull_lood(); //添加数据后回0
+          document.getElementById('Pull').innerHTML = '上拉加载更多';
+        }, 2000)
+      }
+    );
+
+  </script>
+</body>
+
+</html>
