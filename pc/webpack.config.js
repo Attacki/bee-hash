@@ -22,28 +22,28 @@ module.exports = (options = {}) => ({
     rules: [{
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {loaders:{
-            css: ExtractTextPlugin.extract({
-                use: 'css-loader',
-                fallback: 'vue-style-loader'
-            })
-        }}
+        // options: {loaders:{
+        //     css: ExtractTextPlugin.extract({
+        //         use: 'css-loader',
+        //         fallback: 'vue-style-loader'
+        //     })
+        // }}
       },
       {
         test: /\.js$/,
         use: ['babel-loader'],
         exclude: /node_modules/
       },
-      // {
-      //   test: /\.css$/,
-      //   use: ['style-loader', 'css-loader', 'postcss-loader']
-      // },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: "css-loader"
-        })
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       },
+      // {
+      //   test: /\.css$/,
+      //   use: ExtractTextPlugin.extract({
+      //     use: "css-loader"
+      //   })
+      // },
       {
         test: /\.sass$/,
         use: [
@@ -59,7 +59,7 @@ module.exports = (options = {}) => ({
           loader: 'url-loader',
           options: {
             limit: 1000,
-            name:'/dist/img/[name].[ext]'
+            name:'[name].[ext]'
           }
         }]
       }
@@ -72,7 +72,7 @@ module.exports = (options = {}) => ({
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     }),
-    new ExtractTextPlugin("[name].[contenthash:8].css"),
+    // new ExtractTextPlugin("[name].[contenthash:8].css"),
     // new Prerender(
     //   //将渲染的文件放到dist目录下
     //   resolve(__dirname, 'dist'),   
