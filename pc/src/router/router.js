@@ -32,6 +32,7 @@ import detail from '../assets/system/detail'//充值
 import doc from '../assets/doc/doc'    
 import sell from '../assets/doc/sellAgree'      //销售协议
 import agree from '../assets/doc/agreement'     //服务协议
+import privacy from '../assets/doc/privacy'     //服务协议
 
 export default new VueRouter({
   mode: 'history',
@@ -144,6 +145,11 @@ export default new VueRouter({
         { path:'agree',component:agree },
         { path:'sell',component:sell }
       ]
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: privacy
     },
     {
       path: '/reset',

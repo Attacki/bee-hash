@@ -8,6 +8,7 @@
     "build": "rimraf dist && webpack -p --progress --hide-modules"
   },
   "dependencies": {
+    "array-includes": "^3.0.3",
     "axios": "^0.18.0",
     "element-ui": "^2.3.4",
     "extract-text-webpack-plugin": "^2.1.2",

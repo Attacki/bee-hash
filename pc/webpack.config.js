@@ -73,20 +73,20 @@ module.exports = (options = {}) => ({
       template: 'src/index.html'
     }),
     new ExtractTextPlugin("[name].[contenthash:8].css"),
-    new Prerender(
-      //将渲染的文件放到dist目录下
-      resolve(__dirname, 'dist'),   
-      //需要预渲染的路由信息
-      [ '/','/hash/0'],
-      {
-      //在一定时间后再捕获页面信息，使得页面数据信息加载完成
-        captureAfterTime: 10000,
-        //忽略打包错误
-        ignoreJSErrors: true,
-        phantomOptions: '--web-security=false',
-        maxAttempts: 10,
-      }
-    ),
+    // new Prerender(
+    //   //将渲染的文件放到dist目录下
+    //   resolve(__dirname, 'dist'),   
+    //   //需要预渲染的路由信息
+    //   [ '/','/hash/0'],
+    //   {
+    //   //在一定时间后再捕获页面信息，使得页面数据信息加载完成
+    //     captureAfterTime: 10000,
+    //     //忽略打包错误
+    //     ignoreJSErrors: true,
+    //     phantomOptions: '--web-security=false',
+    //     maxAttempts: 10,
+    //   }
+    // ),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     })
